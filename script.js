@@ -7,7 +7,7 @@ const form = document.querySelector('form')
 const message = [
     'First Name cannot be empty',
     'Last Name cannot be empty',
-    'Looks like this is not an email',
+    'Email Address cannot be empty',
     'Password cannot be empty'
 ]
 
@@ -22,8 +22,17 @@ form.addEventListener('submit', (e) => {
     e.preventDefault()
 
     inputs.forEach((input, index) => {
-        if (input.value.trim() === '') {
-            errorMessageFunc(index)
+        let value = input.value.trim()
+        if (index !== 2) {
+            if (value === '') {
+                errorMessageFunc(index)
+            }
+        } else {
+            if (value === '') {
+                errorMessageFunc(index)
+            } else {
+                errorMessageEmailFunc(value, index)
+            }
         }
     })
 })
@@ -45,4 +54,18 @@ function errorMessageFunc(index) {
         inputs[index].placeholder = 'email@example.com'
         errorMessages[index].innerHTML = message[index]
     }
+}
+
+function errorMessageEmailFunc(value, index) {
+    if (!validateEmail(value)) {
+        formGroups[index].classList.add('error')
+        inputs[index].value = ''
+        inputs[index].placeholder = 'email@example.com'
+        errorMessages[index].innerHTML = 'Looks like this is not an email'
+    }
+}
+
+function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return regex.test(email)
 }
